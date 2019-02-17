@@ -25,6 +25,17 @@ function addTaskContfun() {
         document.querySelector(".serBoxDiv input").value = "";
     }
     document.querySelector(".addTaskLink").addEventListener("click", addTaskFun);
+  
+    document.addEventListener('keypress', function (e) {
+        if (document.querySelector(".taskCont").firstChild == document.querySelector(".formCont")){
+        console.log(e);
+        var key = e.which || e.keyCode;
+        console.log(key)
+    if (key === 13) {
+        addTaskFun();
+    }
+}
+});
     // add Task button pressing function    
 }
 
@@ -33,24 +44,39 @@ var loadingFun = function() {
 }
 
 var callBack = function (response) {
+    if(response == "null" ) {
+        document.querySelector(".taskAdding").innerHTML="";
+        returnHome()
+    } else {
+    var divTasksContainer = document.createElement("div");
+    divTasksContainer.setAttribute("class", "allTasksCOnt");
+    var resObject  = JSON.parse(response);
+    var tasksStrArr = Object.values(resObject);
+    var tasksIdsArr = Object.getOwnPropertyNames(resObject);
+
+    for (i = 0; i < tasksStrArr.length; i++) {
+        var todoItem = document.createElement('div');
+        todoItem.setAttribute("id",("Item" + (i+1)) );
+        var itemInput = document.createElement("input");
+        var itemCheckInput = document.createElement("input");
+        itemCheckInput.setAttribute("type","checkbox");
+        itemCheckInput.setAttribute("data-id",tasksIdsArr[i]);
+        itemCheckInput.addEventListener('change',dataDeletion);      
+        itemInput.setAttribute("data-id", tasksIdsArr[i]);
+        itemInput.value = tasksStrArr[i];
+        todoItem.appendChild(itemCheckInput);
+        todoItem.appendChild(itemInput);
+        divTasksContainer.appendChild(todoItem);
+        itemInput.style.border = "none";
+        itemInput.style.outline = "none";
+        itemInput.style.width = "90%";
+    }
     
     var baseDiv = document.querySelector(".taskAdding");
-    var divcr = document.createElement("div");
-    divcr.setAttribute("class", "allTasksCOnt");
-    console.log(response);
-    var resObjec  = JSON.parse(response);
-    console.log(resObjec);
-    var tasksStrArr = Object.values(resObjec);
-    console.log(tasksStrArr);
-    var tasksBdyCont = ""
-    for (i = 0; i < tasksStrArr.length; i++) {
-        tasksBdyCont += "<div>"+"<input type='checkbox'>"+tasksStrArr[i]+"</div>"
-    }
-    divcr.innerHTML = tasksBdyCont
     while (baseDiv.firstChild) {
         baseDiv.removeChild(baseDiv.firstChild)
     }
-    baseDiv.insertBefore(divcr, baseDiv.childNodes[0]);
+    baseDiv.insertBefore(divTasksContainer, baseDiv.childNodes[0]);
     if (baseDiv.innerHTML!="") {
         baseDiv.style.margin = "10px 0 0 0";
         baseDiv.style.padding = " 0 15px";
@@ -68,6 +94,8 @@ var callBack = function (response) {
     allchDivs[i].style.borderTop = "1px solid #FFF6EA";
     }
 }
+}
+
 
 var onloadTasks = function() {
     var intialLoad = new ajaxWrapper();
@@ -99,6 +127,18 @@ function dateAdding() {
     document.getElementById("toDate").innerHTML = toDate;
     document.getElementById("toMonth").innerHTML = monthscd[toMonth];
 }
+
+function  dataDeletion(evenPassing){
+    
+    var targetId = evenPassing.target.getAttribute('data-id');
+    var dataDelObj = new ajaxWrapper();
+    dataDelObj.setURL("https://p1-to-do.firebaseio.com/"+targetId+".json")
+    dataDelObj.setMethod("delete");
+    dataDelObj.executeCall();
+    dataDelObj.setCallBackFun(onloadTasks);
+    
+}
+
 
 
 
