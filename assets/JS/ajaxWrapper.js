@@ -1,5 +1,3 @@
-
-var fireBaseKeys = [];
 var ajaxWrapper = function (bodyData) {
     this.URL = null;
     this.method = "";
