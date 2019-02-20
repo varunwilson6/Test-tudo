@@ -1,6 +1,3 @@
-
-
-
 // Add Task Button on home page
 function taskCreDv() {
     {
@@ -50,6 +47,7 @@ function Seac_AssTas_Can() {
         serBoxDiv.style.borderRadius = "3px";
         serBoxDiv.style.margin = "18px 0 0";
         serBoxDiv.style.height = "33px";
+        serBoxDiv.style.position = "relative";
         document.querySelector(".addTaskForm").appendChild(serBoxDiv);
     }
     {
@@ -59,9 +57,45 @@ function Seac_AssTas_Can() {
         serBox.style.border = "none";
         serBox.setAttribute("placeholder", "e.g. Buy gift tomorrow at 6pm p1 #Errands")
         serBox.style.padding = "9px 9px 0 8px";
-        serBox.style.width = "100%";
+        serBox.style.width = "85%";
         serBox.style.boxSizing = "border-box";
         document.querySelector(".serBoxDiv").appendChild(serBox);
+    }
+    {
+        var dateNearInput = document.createElement("div");
+        dateNearInput.setAttribute("id", "date_Near_In");
+        dateNearInput.setAttribute("title", "Select Date")
+        dateNearInput.style.display = "inline-block";
+        dateNearInput.style.padding = "0 8px";
+        dateNearInput.style.cursor = "pointer";
+        dateNearInput.style.fontSize = "15px";
+        dateNearInput.style.color = "gray";
+        dateNearInput.style.borderLeft = "1px solid";
+        dateNearInput.style.verticalAlign = "bottom";
+        document.querySelector(".serBoxDiv").appendChild(dateNearInput);
+        var subSpan1 = document.createElement("span"); 
+        subSpan1.setAttribute("id","date_Near_In_Date");
+        var subSpan2 = document.createElement("span"); 
+        subSpan2.setAttribute("id","date_Near_In_Day");
+        document.getElementById("date_Near_In").appendChild(subSpan1);
+        document.getElementById("date_Near_In").appendChild(subSpan2);
+        subSpan1.innerHTML = today_Date;
+        subSpan2.innerHTML = today_Day;
+        document.querySelector("#date_Near_In > span ").style.marginRight = "5px";
+        // document.getElementById("date_Near_In").addEventListener("click",function(){alert("kool")});
+        dateNearInput.addEventListener("mouseover",function(){
+            this.style.color = "red";
+            this.style.padding = "0 3px";
+            this.style.fontSize = "14px";
+            if(task_Temp_Due == null) {
+            subSpan1.innerHTML = "Due";
+            subSpan2.innerHTML = "Date";
+        }
+        });
+        dateNearInput.addEventListener("mouseout",function(){
+            this.style.color = "gray";
+        });
+        dateNearInput.addEventListener("click", displayDateIp); // Date in will display in below statement while clicking   
     }
 {
     var addTaskLink = document.createElement("a");

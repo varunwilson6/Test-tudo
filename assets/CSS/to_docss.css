@@ -128,6 +128,22 @@
             float: right;
             margin-right: 20px;
         }
+        .svgCont {
+            width: 80%;
+            display: inline-block;
+        }
+        .log_Out {
+        float: right;
+        border: 1px solid transparent;
+        padding: 3px 8px;
+        border-radius: 5px;
+        color: white;
+        }
+        .log_Out:hover {
+            border: 1px solid rgb(255, 138, 60);
+            background-color: #e98300;
+            cursor: pointer;
+        }
         .appviewsvgCont {
             width: 260px;
             margin:0 auto;

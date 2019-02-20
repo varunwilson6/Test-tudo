@@ -1,4 +1,6 @@
-var constInput;
+// Gobal variables
+{ var monthscd, daysscd, constInput, today_Date, today_Day, today_Month,task_Temp_Due, tasks_Due_Date }
+
 
 function addTaskContfun() {
     //  console.log(document.querySelector(".addTaskLink"));
@@ -8,18 +10,19 @@ function addTaskContfun() {
             console.log(userTask);
             var sendingObj = {};
             sendingObj.Task = userTask;
+            sendingObj.Date = task_Temp_Due;
             console.log(JSON.stringify(sendingObj));
             var ajaxWraobj1 = new ajaxWrapper(JSON.stringify(sendingObj));
             ajaxWraobj1.setMethod("POST");
             ajaxWraobj1.setURL("https://p1-to-do.firebaseio.com/to-do.json");
             ajaxWraobj1.setCallBackFun(function (response) {
-                console.log("Function called", response);
                 var ajaxWraobj2 = new ajaxWrapper();
                 ajaxWraobj2.setLoadingFun(loadingFunSub);
                 ajaxWraobj2.setMethod("GET");
                 ajaxWraobj2.setURL("https://p1-to-do.firebaseio.com/to-do.json");
                 ajaxWraobj2.setCallBackFun(callBack)
                 ajaxWraobj2.executeCall();
+                console.log(response)
             });
             ajaxWraobj1.executeCall();
         }
@@ -71,10 +74,10 @@ var callBack = function (response) {
     var divTasksContainer = document.createElement("div");
     divTasksContainer.setAttribute("class", "allTasksCOnt");
     var resObject  = JSON.parse(response);
-  //  console.log(resObject);
+  console.log(resObject);
     var keysStore = Object.keys(resObject);
-  //  console.log(keysStore);
-   // console.log(resObject[keysStore[1]].Task);
+  console.log(keysStore);
+   // console.log(resObject[keysStotask_Temp_duere[1]].Task);
     for (i = 0; i < keysStore.length; i++) {
         var todoItem = document.createElement('div');
         todoItem.setAttribute("id",("Item" + (i+1)) );
@@ -85,6 +88,7 @@ var callBack = function (response) {
         var itemCheckInput = document.createElement("input");
         itemCheckInput.setAttribute("type","checkbox");
         itemCheckInput.setAttribute("data-id",[keysStore[i]]);
+        itemCheckInput.setAttribute("class","taskInputBox");
         itemCheckInput.addEventListener('change',dataDeletion);
         itemCheckInput.style.verticalAlign = "middle";
         itemInput.style.boxSizing = "border-box";
@@ -97,7 +101,11 @@ var callBack = function (response) {
         todoItem.appendChild(itemInput);
         divTasksContainer.appendChild(todoItem);
         itemInput.style.outline = "none";
-        itemInput.style.width = "90%";
+        itemInput.style.width = "80%";
+        //console.log(resObject[keysStore[i]].Date[1])
+        //Due date Adding part
+        // var dueDivCont = document.createElement("div");
+        // dueDivCont
     }
     
     var baseDiv = document.querySelector(".taskAdding");
@@ -146,8 +154,11 @@ function dateAdding() {
     var toDate = todayDates.getDate();
     var toMonth = todayDates.getMonth();
     console.log(toDay,toDate,toMonth);
-    var monthscd = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","sept","Nov","Dec"];
-    var daysscd = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    monthscd = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","sept","Nov","Dec"];
+    daysscd = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    today_Date = toDate;
+    today_Day = daysscd[toDay];
+    today_Month = monthscd[toMonth];
     var xy = document.getElementById("to");
     xy.innerHTML = daysscd[toDay];
     document.getElementById("toDate").innerHTML = toDate;
@@ -224,21 +235,24 @@ function editAndSave(evenPassing) {
     saveLink.style.cursor = "pointer";
     document.getElementById("activetask").appendChild(saveLink);
     var saveLinkSpan = document.createElement("span");
-    saveLinkSpan.style.padding = "8px 12px";
+    saveLinkSpan.style.padding = "4px 12px";
     saveLinkSpan.style.display = "inline-block";
     saveLinkSpan.innerHTML = "Save";
     document.getElementById("activetask").lastChild.appendChild(saveLinkSpan);
     saveLinkSpan.addEventListener("click",updateTask);
     var cancelLink = document.createElement("a");
-    cancelLink.style.padding = "4px 8px";
-    cancelLink.style.backgroundColor = "crimson";
-    cancelLink.style.borderRadius = "5px";
+    cancelLink.setAttribute("id", "cancelLink");
+    cancelLink.style.padding = "3px 8px";
+    cancelLink.style.backgroundColor = "#f7630e";
+    cancelLink.style.borderRadius = "10px";
     cancelLink.innerHTML = "Cancel";
     cancelLink.style.marginLeft = "5px";
     cancelLink.style.fontSize = "15px";
     cancelLink.style.color = "white";
     cancelLink.style.cursor = "pointer";
     cancelLink.addEventListener("click",checkBoxUnhide);
+    cancelLink.addEventListener("mouseover",cancelCss);
+    cancelLink.addEventListener("mouseout",cancelCssOut);
     document.getElementById("activetask").appendChild(cancelLink);
 }
 // This fucntion is using to Update the tasks,..
@@ -259,6 +273,101 @@ function updateTask(evenPassing) {
     ajaxWraobj4.setCallBackFun(onloadTasks);
     ajaxWraobj4.executeCall();    
 }
+
+// cancel button css Functions 
+function cancelCss() {
+    document.getElementById("cancelLink").style.backgroundColor = ("#ea5b19");
+    cancelLink.style.borderRadius = "10px";
+}
+function cancelCssOut() {
+    document.getElementById("cancelLink").style.backgroundColor = "#f7630e";
+    document.getElementById("cancelLink").style.borderRadius = ("5px")
+}
+
+//function calender display while clicking date in input box
+function displayDateIp() {
+    //creating Div to contain Date input and it will be absolute in postion
+    var dateIpCr = document.createElement("div");
+    dateIpCr.setAttribute("id","dateIn_Cr");
+    dateIpCr.style.position = "absolute";
+    dateIpCr.style.top = "40px";
+    dateIpCr.style.left = "402px";
+
+    document.querySelector(".serBoxDiv").appendChild(dateIpCr);
+    //creating date input callender
+    if(!document.getElementById("cal_in_dateIn")) {
+    var dateIp = document.createElement("input");
+    dateIp.setAttribute("type","date");
+    dateIp.setAttribute("id","cal_in_dateIn");
+    document.getElementById("dateIn_Cr").appendChild(dateIp);
+
+    //Submit Span Creation
+    var dateSubmitSpan = document.createElement("span");
+    dateSubmitSpan.setAttribute("id", "date_Sub");
+    dateSubmitSpan.style.fontSize = "9px";
+    dateSubmitSpan.innerHTML = "Submit";
+    dateSubmitSpan.style.padding = "2px 8px";
+    dateSubmitSpan.style.border = "1px solid transparent"
+    dateSubmitSpan.style.background = "green";
+    dateSubmitSpan.style.borderRadius = "5px";
+    dateSubmitSpan.style.color = "wheat";
+    dateSubmitSpan.style.margin = "5px 5px 0px 0px";
+    dateSubmitSpan.addEventListener("mouseover", function() {
+        this.style.border = "1px solid #3dff4d";
+        this.style.color = "white";
+        this.style.cursor = "pointer";
+    })
+    dateSubmitSpan.addEventListener("mouseout", function() {
+        this.style.border = "1px solid transparent";
+        this.style.color = "wheat";
+    })
+    dateSubmitSpan.addEventListener("click", function() {
+        var calenTemValue =  document.getElementById("cal_in_dateIn").value;
+        console.log(typeof(calenTemValue));
+        task_Temp_Due = calenTemValue;
+        document.getElementById("dateIn_Cr").remove();
+        fun_InValAnalize();
+    })
+
+    //Close Span Creation
+    var dateCloseSpan = document.createElement("span");
+    dateCloseSpan.setAttribute("id", "date_Sub");
+    dateCloseSpan.style.fontSize = "9px";
+    dateCloseSpan.innerHTML = "Close";
+    dateCloseSpan.style.padding = "2px 8px";
+    dateCloseSpan.style.border = "1px solid transparent"
+    dateCloseSpan.style.background = "red";
+    dateCloseSpan.style.borderRadius = "5px";
+    dateCloseSpan.style.color = "wheat";
+    dateCloseSpan.style.fontWeight = "bold";
+    dateCloseSpan.addEventListener("mouseover", function() {
+        this.style.border = "1px solid yellow";
+        this.style.color = "white";
+        this.style.cursor = "pointer";
+    })
+    dateCloseSpan.addEventListener("mouseout", function() {
+        this.style.border = "1px solid transparent";
+        this.style.color = "wheat";
+    })
+    dateCloseSpan.addEventListener("click", function() {
+        document.getElementById("dateIn_Cr").remove();
+    })
+
+
+    document.getElementById("dateIn_Cr").appendChild(dateSubmitSpan);
+    document.getElementById("dateIn_Cr").appendChild(dateCloseSpan);
+    }
+}
+// analizing the given input and showing it in the due date spans
+function fun_InValAnalize() {
+    var value_str = task_Temp_Due;
+    var value_arr = value_str.split("-");
+    task_Temp_Due = value_arr;
+    console.log(task_Temp_Due);
+    document.getElementById("date_Near_In_Date").innerHTML = task_Temp_Due[2];
+    document.getElementById("date_Near_In_Day").innerHTML = monthscd[Number(task_Temp_Due[1])-1];
+}
+
 
 
 
