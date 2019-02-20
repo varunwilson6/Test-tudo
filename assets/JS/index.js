@@ -12,11 +12,10 @@ function addTaskContfun() {
             var ajaxWraobj1 = new ajaxWrapper(JSON.stringify(sendingObj));
             ajaxWraobj1.setMethod("POST");
             ajaxWraobj1.setURL("https://p1-to-do.firebaseio.com/to-do.json");
-            ajaxWraobj1.setLoadingFun(loadingFun);
             ajaxWraobj1.setCallBackFun(function (response) {
                 console.log("Function called", response);
                 var ajaxWraobj2 = new ajaxWrapper();
-                ajaxWraobj2.setLoadingFun(loadingFun);
+                ajaxWraobj2.setLoadingFun(loadingFunSub);
                 ajaxWraobj2.setMethod("GET");
                 ajaxWraobj2.setURL("https://p1-to-do.firebaseio.com/to-do.json");
                 ajaxWraobj2.setCallBackFun(callBack)
@@ -39,10 +38,31 @@ function addTaskContfun() {
     // add Task button pressing function    
 }
 
-var loadingFun = function() {
-    
+// Loading function on Each task adding
+var loadingFunSub = function() {
+    var divCre = document.createElement("div");
+    divCre.setAttribute("id","loadFunDiv");
+    document.querySelector(".taskAdding").appendChild(divCre);
+    var loadFunDivInner = '<img style="-webkit-user-select: none;" src="file:///home/varun/Downloads/Dual%20Ring-2.2s-200px.gif" width=50 height=50></img>'
+    document.getElementById("loadFunDiv").innerHTML = loadFunDivInner;
+    document.querySelector("#loadFunDiv > img").style.display = "block";
+    document.querySelector("#loadFunDiv > img").style.margin = "0 auto"
 }
 
+var loadingFun = function() {
+    var loadFunDivInner = '<div id="mainLoadCont"><img style="-webkit-user-select: none;" src="file:///home/varun/Downloads/Dual%20Ring-2.2s-200px.gif" ></img></div>'
+    document.querySelector(".taskCont").innerHTML = loadFunDivInner;
+    document.querySelector("#mainLoadCont img").style.display = "block";
+    document.querySelector("#mainLoadCont img").style.margin = "0 auto"; 
+}
+
+var removeloadingFun = function() {
+    if (document.getElementById("mainLoadCont")) {
+        document.getElementById("mainLoadCont").remove();
+    }
+}
+
+// Call Back Function - Creates Divs, checkbox all there attributes to contain the adding
 var callBack = function (response) {
     if(response == "null" ) {
         document.querySelector(".taskAdding").innerHTML="";
@@ -54,10 +74,7 @@ var callBack = function (response) {
   //  console.log(resObject);
     var keysStore = Object.keys(resObject);
   //  console.log(keysStore);
-
    // console.log(resObject[keysStore[1]].Task);
-
-
     for (i = 0; i < keysStore.length; i++) {
         var todoItem = document.createElement('div');
         todoItem.setAttribute("id",("Item" + (i+1)) );
@@ -104,23 +121,21 @@ var callBack = function (response) {
     allchDivs[i].style.padding = "10px 0";
     allchDivs[i].style.borderTop = "1px solid #FFF6EA";
     }
+    returnHome();
 }
 }
-
 
 var onloadTasks = function() {
     var intialLoad = new ajaxWrapper();
     intialLoad.setURL('https://p1-to-do.firebaseio.com/to-do.json');
     intialLoad.setMethod('GET');
-    intialLoad.executeCall();
+    intialLoad.setLoadingFun(loadingFun);
+    intialLoad.setRemoveLoadingFun(removeloadingFun);
     intialLoad.setCallBackFun(callBack);
+    intialLoad.executeCall();
 }
 
 var onloadFun =  function () {
-    var addTaskImp =  document.querySelector(".addTask > a");
-    addTaskImp.onclick = taskCreDv;
-    var addTaskImp2 =  document.querySelector(".addTaskBtCont > button");
-    addTaskImp2.onclick = taskCreDv;
     dateAdding();
 }
 
@@ -148,14 +163,13 @@ function  dataDeletion(evenPassing){
     dataDelObj.setCallBackFun(onloadTasks);
     console.log(dataDelObj.URL)
     dataDelObj.executeCall();
-    
 }
 function checkBoxhide(evenPassing) {
     var hiddingCheckbox = evenPassing.target.parentNode.firstChild;
     hiddingCheckbox.style.display = "none";
-    evenPassing.target.style.borderColor = "gainsboro";
+    evenPassing.target.style.border = "1px solid gainsboro";
     evenPassing.target.style.borderRadius = "3px";
-    evenPassing.target.style.width = "100%"
+    evenPassing.target.style.width = "100%";
     editAndSave(evenPassing);
 }
 
@@ -171,6 +185,14 @@ function checkBoxUnhide (evenPassing) {
     var parentDiv = evenPassing.target.parentNode;
     parentDiv.removeChild(parentDiv.lastChild.previousSibling);
     parentDiv.removeChild(parentDiv.lastChild);
+    if (document.getElementById("activetask")) {   
+        var tempActiveTask = document.getElementById("activetask");
+        var inputBox = tempActiveTask.parentNode.firstChild.nextSibling;
+        var consvaleview = constInput;
+        inputBox.style.width = "90%";
+        inputBox.previousSibling.style.display = "inline-block"
+        document.getElementById("activetask").remove();
+    }
 
 }
 // This function is for creating the save and cancel button while clicking the tasks,
@@ -180,7 +202,7 @@ function editAndSave(evenPassing) {
     var parentDiv = evenPassing.target.parentNode;
     var TaskValueNow = evenPassing.target.value
     constInput = TaskValueNow;
-    if (document.getElementById("activetask")) {   // removing the exsisting activetask div that contains sav and can
+    if (document.getElementById("activetask")) {   
         var tempActiveTask = document.getElementById("activetask");
         var inputBox = tempActiveTask.parentNode.firstChild.nextSibling;
         var consvaleview = constInput;
@@ -219,9 +241,9 @@ function editAndSave(evenPassing) {
     cancelLink.addEventListener("click",checkBoxUnhide);
     document.getElementById("activetask").appendChild(cancelLink);
 }
-
+// This fucntion is using to Update the tasks,..
 function updateTask(evenPassing) {
-    var inputCurrent = evenPassing.target.parentNode.parentNode.previousSibling;
+    var inputCurrent = evenPassing.target.parentNode.parentNode.previousSibling; // Input text box that contain input to Edit
     input_value = inputCurrent.value;
     var inputCurrent_id = inputCurrent.getAttribute("data-id");
     var Id_OfCont = JSON.stringify(inputCurrent_id);
@@ -235,8 +257,7 @@ function updateTask(evenPassing) {
     ajaxWraobj4.setURL("https://p1-to-do.firebaseio.com/to-do/"+inputCurrent_id+".json");
     ajaxWraobj4.setMethod("PATCH");
     ajaxWraobj4.setCallBackFun(onloadTasks);
-    ajaxWraobj4.executeCall();
-    
+    ajaxWraobj4.executeCall();    
 }
 
 

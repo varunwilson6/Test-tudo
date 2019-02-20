@@ -107,7 +107,7 @@ function svgAppr() {
         {
         var addTask = document.createElement("div");
         addTask.setAttribute("class", "addTask");
-        addTask.style.padding = "18px 12px";
+        addTask.style.padding = "18px 12px 0";
         addTask.style.borderTop = "1px solid rgb(255, 246, 234)"
         document.querySelector(".row2").appendChild(addTask);
         }
@@ -237,7 +237,7 @@ function AddTaskOnly() {
         {
         var addTask = document.createElement("div");
         addTask.setAttribute("class", "addTask");
-        addTask.style.padding = "18px 12px";
+        addTask.style.padding = "18px 12px 0";
         addTask.style.borderTop = "1px solid rgb(255, 246, 234)"
         document.querySelector(".row2").appendChild(addTask);
         }

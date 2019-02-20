@@ -29,7 +29,6 @@ ajaxWrapper.prototype.executeCall = function () {
         if (this.readyState == 4 && this.status == 200) {
             ajaxWrapperInst.removeloadingFun && ajaxWrapperInst.removeloadingFun();
             ajaxWrapperInst.callBackFunction && ajaxWrapperInst.callBackFunction(this.response);
-            console.log(this.response);
         }
     }
     xhttp.open(this.method, this.URL, true);
