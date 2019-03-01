@@ -16,7 +16,7 @@ function returnHome() {
         while (dsPlySpc.firstChild) {
             dsPlySpc.removeChild(dsPlySpc.firstChild);
         }
-        if (document.querySelector(".taskAdding").innerHTML != "") {
+        if (document.querySelector(".taskAdding").firstChild.innerHTML != "") {
             AddTaskOnly() 
         } else {
         svgAppr();
@@ -60,6 +60,12 @@ function Seac_AssTas_Can() {
         serBox.style.width = "85%";
         serBox.style.boxSizing = "border-box";
         document.querySelector(".serBoxDiv").appendChild(serBox);
+        serBox.addEventListener("focus", function() {
+            if (task_Temp_Due == undefined) {
+                document.getElementById("date_Near_In_Date").innerHTML = today_Date;
+                document.getElementById("date_Near_In_Day").innerHTML = today_Day;
+            }            
+        })
     }
     {
         var dateNearInput = document.createElement("div");
@@ -87,7 +93,7 @@ function Seac_AssTas_Can() {
             this.style.color = "red";
             this.style.padding = "0 3px";
             this.style.fontSize = "14px";
-            if(task_Temp_Due == null) {
+            if(task_Temp_Due == undefined) {
             subSpan1.innerHTML = "Due";
             subSpan2.innerHTML = "Date";
         }
@@ -126,7 +132,10 @@ function Seac_AssTas_Can() {
     document.querySelector(".addTaskForm").appendChild(taskCanLink);
 }
 var returnHmImp = document.querySelector(".TaskcanLin");
-returnHmImp.onclick =  returnHome;
+returnHmImp.onclick =  function() {
+    returnHome();
+    data_ResetFun();
+}
 addTaskContfun();
 }
 
@@ -256,7 +265,10 @@ function svgAppr() {
             }
         }
         var addTaskImp =  document.querySelector(".addTask > a");
-        addTaskImp.onclick = taskCreDv;
+        addTaskImp.onclick = function() {
+            taskCreDv()
+            data_ResetFun()            
+        }
         var addTaskImp2 =  document.querySelector(".addTaskBtCont > button");
         addTaskImp2.onclick = taskCreDv;
 }
@@ -302,9 +314,17 @@ function AddTaskOnly() {
         
         }
         var addTaskImp =  document.querySelector(".addTask > a");
-        addTaskImp.onclick = taskCreDv;
+        addTaskImp.onclick = function() {
+            taskCreDv()
+            data_ResetFun()            
+        }
         if (document.querySelector(".taskAdding").innerHTML == "") {
             var addTaskImp2 =  document.querySelector(".addTaskBtCont > button");
             addTaskImp2.onclick = taskCreDv;
         }
+}
+
+function data_ResetFun() {
+        console.log("checking onclick");
+        task_Temp_Due = undefined;
 }
