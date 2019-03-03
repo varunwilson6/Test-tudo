@@ -191,7 +191,7 @@ function validationFun() {
             manSpan.setAttribute("class", "maTrySpan");
                 passValid(target,manSpan)
                 cmtAdd(target, manSpan);
-            } else if (x[i].name == "confirm_pwd" && password == true) {
+            } else if (x[i].name == "confirm_pwd" && password) {
                 var target = x[i];
                 var manSpan = document.createElement("span");
                 manSpan.setAttribute("class", "maTrySpan");
@@ -213,7 +213,7 @@ function validationFun() {
             //     cmtAdd(target, manSpan);
             // } 
         }
-        if (validOk == true) submitFun();
+        if (validOk) submitFun();
     
 }
 

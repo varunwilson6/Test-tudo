@@ -13,10 +13,7 @@ function sign_in_Loader() {
     }
     //loading sign-in Page
     //removing logout button to Login button in Header
-    document.querySelector(".log_Out").innerHTML = "Sign-Up";
-    document.querySelector(".log_Out").addEventListener("click", function () {
-        sign_up_Loader();
-    })
+    
     //setting the previous divs size and align to center;
     document.querySelector(".viewPad").style.margin = "0 auto";
     document.querySelector(".viewPadcenter").style.width = "100%";
@@ -25,7 +22,11 @@ function sign_in_Loader() {
 
 function sign_In_Container() {
     localStorage.setItem("pageStatus", "loginPg");
-    // removing all child contents from the ViewPadCenter 
+    // removing all child contents from the ViewPadCenter
+    document.querySelector(".log_Out").innerHTML = "Sign-Up";
+    document.querySelector(".log_Out").addEventListener("click", function () {
+        sign_up_Loader();
+    }) 
     var viewPadcenterDiv = document.querySelector(".viewPadcenter");
     while (viewPadcenterDiv.firstChild) {
         viewPadcenterDiv.removeChild(viewPadcenterDiv.firstChild);
@@ -150,7 +151,7 @@ function signInValidFun() {
         }
     }
 
-    if (signvalidOk == true) {
+    if (signvalidOk) {
         signIn();
     }
 
@@ -192,9 +193,9 @@ function signIncallBack(response) {
     }
     if (mailauthen==false) {
     usrNotReg()
-    } else if (authen == false && mailauthen == true) {
+    } else if (authen == false && mailauthen) {
         passWrong()
-    } else if(authen == true){
+    } else if(authen){
         head2TaskDiv();
         onloadTasks();
         authen = false;

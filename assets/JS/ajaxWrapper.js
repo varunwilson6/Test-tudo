@@ -27,6 +27,7 @@ ajaxWrapper.prototype.executeCall = function () {
     xhttp.onreadystatechange = function () {
         ajaxWrapperInst.loadingFunction && ajaxWrapperInst.loadingFunction();
         if (this.readyState == 4 && this.status == 200) {
+            console.log('200 got');
             ajaxWrapperInst.removeloadingFun && ajaxWrapperInst.removeloadingFun();
             ajaxWrapperInst.callBackFunction && ajaxWrapperInst.callBackFunction(this.response);
         }

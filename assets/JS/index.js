@@ -6,6 +6,7 @@
 function addTaskContfun() {
     //  //console.log(document.querySelector(".addTaskLink"));
     var addTaskFun = function () {
+        console.log('addTaskfun Eneterd');
         if (document.querySelector(".serBoxDiv input").value != "") {
             var userTask = document.querySelector(".serBoxDiv input").value;
             //console.log(userTask);
@@ -40,6 +41,7 @@ function addTaskContfun() {
                 //console.log(response)
             });
             ajaxWraobj1.executeCall();
+            console.log('Excecute call overed');
         }
         document.querySelector(".serBoxDiv input").value = "";
     }
@@ -50,6 +52,8 @@ function addTaskContfun() {
         var key = e.which || e.keyCode;
         console.log(e);
     if (key === 13) {
+        e.preventDefault();
+        console.log('addTasling to be triggered');
         addTaskFun();
     }
 }
