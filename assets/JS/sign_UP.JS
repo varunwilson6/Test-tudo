@@ -1,14 +1,17 @@
 //global variables
-var password, Email, validOk;
+var password, Email, validOk, stateObj = {};
 
 function sign_up_Loader() {
+    stateObj = { foo: "signup" };
+    history.pushState(stateObj, null, "signup.html");
+
     localStorage.setItem("pageStatus", "signUpPg");
     if (!document.querySelector(".viewPadcenter")) {
     //Head Creating 
     creating_Head();
     //AppHolder Div Creating
     creating_Appholder();
-    //ViewPad Div Creating
+    //ViewPad Div Creatings
     creating_viewPad();
     //ViewPadCenter Div Creating
     creating_viewPadcenter();

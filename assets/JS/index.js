@@ -2,6 +2,15 @@
 { var monthscd, daysscd, constInput, today_Date, today_Day,
      today_Month,task_Temp_Due, tasks_Due_Date, active_data_date }
 
+window.addEventListener("popstate", function(event) {
+    console.log(event.state.foo);
+    if (event.state.foo == 'signin') {
+        sign_in_Loader();
+    } else if (event.state.foo == 'signup') {
+        sign_up_Loader();
+    }
+
+})
 
 function addTaskContfun() {
     //  //console.log(document.querySelector(".addTaskLink"));

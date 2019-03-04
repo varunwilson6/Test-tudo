@@ -1,6 +1,9 @@
 var signvalidOk, userMail, userPwd, loginUserKey, mailauthen; //global variables
 
 function sign_in_Loader() {
+    stateObj = { foo: "signin" };
+    history.pushState(stateObj, null, "signin.html");
+   
     if (!document.querySelector(".viewPadcenter")) {
     //Head Creating 
     creating_Head();
@@ -21,6 +24,7 @@ function sign_in_Loader() {
 }
 
 function sign_In_Container() {
+
     localStorage.setItem("pageStatus", "loginPg");
     // removing all child contents from the ViewPadCenter
     document.querySelector(".log_Out").innerHTML = "Sign-Up";
@@ -114,6 +118,7 @@ function sign_In_Container() {
             cancel_span.setAttribute("id", "forGotText");
             cancel_span.innerHTML = "Forgot Password"
             sign_inLinkCont.appendChild(cancel_span);
+           
 
 }
 
